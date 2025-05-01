@@ -31,16 +31,14 @@ check_events:
     mov     edi, ecx            ; edi = index (start from end)
 
 .loop_iter_start:
-    cmp     edi, -1             ; while edi >= 0
+    cmp     edi, -1
     jl      .loop_iter_end
 
-    ; calculate pointer to current event
     mov     ebx, edi
-    imul    ebx, 36             ; ebx = offset = index * sizeof(event)
-    add     ebx, esi            ; ebx = address of current event
+    imul    ebx, 36
+    add     ebx, esi
 
-    ; default valid = 1 (note: this might be a mistake — see comment below)
-    mov     byte [ebx + 31], 1
+    mov     byte [ebx + 31], 0     ; default: invalid
 
     ; year check
     movzx   eax, word [ebx + 34]
@@ -56,25 +54,25 @@ check_events:
     cmp     edx, 12
     jg      .next
 
-    ; day ≥ 1
-    movzx   eax, byte [ebx + 32]
+    ; day check
+    movzx   eax, byte [ebx + 32]   ; load day into eax
     cmp     eax, 1
     jl      .next
+    mov     edx, eax               ; save the day into edx
 
     ; max days for month
-    mov     eax, edx
+    movzx   eax, byte [ebx + 33]   ; month
     dec     eax
-    movzx   eax, byte [days_in_month + eax]
+    movzx   eax, byte [days_in_month + eax] ; max_day
 
-    cmp     esi, eax
+    cmp     edx, eax               ; compare saved day with max_day
     jg      .next
 
-    ; all valid → set valid = 1
-    mov     byte [ebx + 31], 1
-    jmp     .after_check
+    mov     byte [ebx + 31], 1     ; all checks passed → mark valid
 
 .next:
-    mov     byte [ebx + 31], 0
+    dec     edi
+    jmp     .loop_iter_start
 
 .after_check:
     dec     edi
