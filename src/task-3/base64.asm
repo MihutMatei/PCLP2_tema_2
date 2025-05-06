@@ -4,26 +4,27 @@ extern printf
 global base64
 
 section .data
-    alphabet db 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',\
-                'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',\
-                '0','1','2','3','4','5','6','7','8','9','+','/'
-
-    fmt db "%d", 10, 0
+	alphabet db 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+	fmt db "%d", 10, 0
 
 section .text
 
 base64:
-    ;; DO NOT MODIFY
+	;; DO NOT MODIFY
+
     push ebp
     mov ebp, esp
-    pusha
+	pusha
 
-    mov esi, [ebp + 8]    ; source
-    mov ebx, [ebp + 12]   ; input length (must be multiple of 3)
-    mov edi, [ebp + 16]   ; dest
-    mov edx, [ebp + 20]   ; pointer to dest_len
-    ;; DO NOT MODIFY
+	mov esi, [ebp + 8] ; source array
+	mov ebx, [ebp + 12] ; n
+	mov edi, [ebp + 16] ; dest array
+	mov edx, [ebp + 20] ; pointer to dest length
 
+	;; DO NOT MODIFY
+
+
+	; -- Your code starts here --
     xor ecx, ecx          ; input index
     push edx              ; save dest_len pointer
 
@@ -81,9 +82,13 @@ base64:
     mov eax, edi
     sub eax, [ebp + 16]    ; dest_len = edi - dest
     mov [edx], eax
+	; -- Your code ends here --
 
-    ;; DO NOT MODIFY
-    popa
-    leave
-    ret
-    ;; DO NOT MODIFY
+
+	;; DO NOT MODIFY
+
+	popa
+	leave
+	ret
+
+	;; DO NOT MODIFY

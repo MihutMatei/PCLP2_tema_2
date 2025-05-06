@@ -84,39 +84,51 @@ sort_events:
     ; compare names
     xor eax, eax
 .name_loop:
-    mov dl, [edx + eax]       ; character from name[i]
-    mov bl, [ecx + eax]       ; character from name[j]
+    mov dl, [edx + eax]       ; char from name[i]
+    mov bl, [ecx + eax]       ; char from name[j]
+
     cmp dl, 0
-    je .next_compare          ; skip if end of name[i]
+    jne .check_bl
     cmp bl, 0
-    je .do_swap               ; swap if end of name[j]
+    je .next_compare          ; both end → equal → no swap
+    jmp .do_swap              ; i ends first → i < j → do not swap
+
+.check_bl:
+    cmp bl, 0
+    je .next_compare          ; j ends first → j < i → don't swap
+
     cmp dl, bl
-    jg .do_swap               ; swap if name[i] < name[j]
-    jl .next_compare          ; skip if name[i] > name[j]
+    jl .next_compare
+    jg .do_swap
+
     inc eax
     jmp .name_loop
+
 .do_swap:
     push esi
     push edi
     push ecx
+    push edx
 
-    mov esi, edx      ; esi = &events[i]
-    mov edi, ecx      ; edi = &events[j]
-    mov ecx, 36       ; size of struct
+    mov esi, edx      ; esi = addr_i
+    mov edi, ecx      ; edi = addr_j
+    mov ecx, 36       ; swap 36 bytes
 
 .swap_loop:
-    mov al, [esi]     ; temp ← *esi
-    mov bl, [edi]     ; temp ← *edi
-    mov [esi], bl     ; *esi ← *edi
-    mov [edi], al     ; *edi ← *esi
+    mov al, [esi]
+    mov bl, [edi]
+    mov [esi], bl
+    mov [edi], al
     inc esi
     inc edi
     dec ecx
-    jnz .swap_loop    ; continue swapping until ecx reaches 0
+    jnz .swap_loop
 
+    pop edx
     pop ecx
     pop edi
     pop esi
+
 
 .next_compare:
     inc edi
