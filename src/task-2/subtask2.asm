@@ -1,12 +1,16 @@
+;;MIHUTMATEI311CA
 %include "../include/io.mac"
 
 ; declare your structs here
+struc date
+    .day:    resb 1
+    .month:  resb 1
+    .year:   resw 1
+endstruc
 struc event
-    name:   resb 31
-    valid:  resb 1
-    day:    resb 1
-    month:  resb 1
-    year:   resw 1
+    .name:   resb 31
+    .valid:  resb 1
+    .date:  resb 4
 endstruc
 
 section .text

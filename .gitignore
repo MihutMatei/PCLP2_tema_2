@@ -53,3 +53,5 @@ dkms.conf
 Dockerfile
 local.sh
 /checker
+.gdb_history
+checker
