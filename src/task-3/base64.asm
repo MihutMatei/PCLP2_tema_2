@@ -13,8 +13,8 @@ section .text
 base64:
 	;; DO NOT MODIFY
 
-    push ebp
-    mov ebp, esp
+	push ebp
+	mov ebp, esp
 	pusha
 
 	mov esi, [ebp + 8] ; source array
@@ -26,63 +26,63 @@ base64:
 
 
 	; -- Your code starts here --
-    xor ecx, ecx          ; input index
-    push edx              ; save dest_len pointer
+	xor ecx, ecx          ; input index
+	push edx              ; save dest_len pointer
 
 .loop:
-    cmp ecx, ebx
-    jge .done
+	cmp ecx, ebx
+	jge .done
 
-    ; Correctly load 3 bytes into 24-bit eax
-    movzx eax, byte [esi + ecx]        ; b1
-    shl eax, 16
+	; Correctly load 3 bytes into 24-bit eax
+	movzx eax, byte [esi + ecx]        ; b1
+	shl eax, 16
 
-    movzx edx, byte [esi + ecx + 1]    ; b2
-    shl edx, 8
-    or eax, edx
+	movzx edx, byte [esi + ecx + 1]    ; b2
+	shl edx, 8
+	or eax, edx
 
-    movzx edx, byte [esi + ecx + 2]    ; b3
-    or eax, edx                        ; eax = b1<<16 | b2<<8 | b3
+	movzx edx, byte [esi + ecx + 2]    ; b3
+	or eax, edx                        ; eax = b1<<16 | b2<<8 | b3
 
-    ; 1st character
-    mov edx, eax
-    shr edx, 18
-    and edx, 0x3F
-    movzx edx, byte [alphabet + edx]
-    mov [edi], dl
-    inc edi
+	; 1st character
+	mov edx, eax
+	shr edx, 18
+	and edx, 0x3F
+	movzx edx, byte [alphabet + edx]
+	mov [edi], dl
+	inc edi
 
-    ; 2nd character
-    mov edx, eax
-    shr edx, 12
-    and edx, 0x3F
-    movzx edx, byte [alphabet + edx]
-    mov [edi], dl
-    inc edi
+	; 2nd character
+	mov edx, eax
+	shr edx, 12
+	and edx, 0x3F
+	movzx edx, byte [alphabet + edx]
+	mov [edi], dl
+	inc edi
 
-    ; 3rd character
-    mov edx, eax
-    shr edx, 6
-    and edx, 0x3F
-    movzx edx, byte [alphabet + edx]
-    mov [edi], dl
-    inc edi
+	; 3rd character
+	mov edx, eax
+	shr edx, 6
+	and edx, 0x3F
+	movzx edx, byte [alphabet + edx]
+	mov [edi], dl
+	inc edi
 
-    ; 4th character
-    mov edx, eax
-    and edx, 0x3F
-    movzx edx, byte [alphabet + edx]
-    mov [edi], dl
-    inc edi
+	; 4th character
+	mov edx, eax
+	and edx, 0x3F
+	movzx edx, byte [alphabet + edx]
+	mov [edi], dl
+	inc edi
 
-    add ecx, 3
-    jmp .loop
+	add ecx, 3
+	jmp .loop
 
 .done:
-    pop edx                ; restore pointer to dest_len
-    mov eax, edi
-    sub eax, [ebp + 16]    ; dest_len = edi - dest
-    mov [edx], eax
+	pop edx                ; restore pointer to dest_len
+	mov eax, edi
+	sub eax, [ebp + 16]    ; dest_len = edi - dest
+	mov [edx], eax
 	; -- Your code ends here --
 
 
